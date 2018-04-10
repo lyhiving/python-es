@@ -67,17 +67,23 @@ if point_xy_one[0][1] < point_xy_two[0][1]:
 else:
     point_xy_top = point_xy_two
     point_xy_bottom = point_xy_one
-# TODO 找寻下方模块的最顶点与上方模块最低点Y轴坐标
+'''
+找寻下方模块的最顶点与上方模块最低点Y轴坐标
+'''
 point_xy_bottom_up = sorted(point_xy_bottom, key=lambda x: x[1])[0]
 point_xy_top_down = sorted(point_xy_top, key=lambda x: x[1], reverse=True)[0]
-# TODO 进行检测项目个数 bottom_y - top_y / n
+'''
+进行检测项目个数 bottom_y - top_y / n
+'''
 print(point_xy_bottom_up)
 print(point_xy_top_down)
 cv.circle(images, (point_xy_bottom_up[0], point_xy_bottom_up[1]), 3, (0, 255, 0), 2)
 cv.circle(images, (point_xy_top_down[0], point_xy_top_down[1]), 3, (0, 255, 0), 2)
 y_value = (point_xy_bottom_up[1]-point_xy_top_down[1]) / 30
 x_width = (point_xy_one[len(point_xy_one)-1][0] - point_xy_one[0][0]) / 2
-# TODO 计算出每个点位，并描绘至原图层
+'''
+计算出每个点位，并描绘至原图层
+'''
 points = []
 last_y = point_xy_top_down[1]
 last_x = math.ceil(point_xy_one[0][0] + x_width)
