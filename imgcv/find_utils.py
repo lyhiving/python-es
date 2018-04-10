@@ -16,3 +16,17 @@ def foreach_all_ndarray(arr, val_list=None):
             else:
                 val_list.append([arr[0], arr[1]])
                 break
+
+
+def ndarray_split_group(values, items):
+    for index, item in enumerate(values):
+        if index == 0:
+            items.append([item])
+        else:
+            if (values[0][1] + 100) > item[1] > (values[0][1] - 100):
+                items[0].append(item)
+            else:
+                try:
+                    items[1].append(item)
+                except IndexError as e:
+                    items.append([item])
