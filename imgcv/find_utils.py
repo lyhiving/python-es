@@ -30,3 +30,11 @@ def ndarray_split_group(values, items):
                     items[1].append(item)
                 except IndexError as e:
                     items.append([item])
+
+
+def get_color_rgb(px):
+    s = ''
+    for i in px:
+        # print(i)
+        s = s+str(i)+','
+    return s[0:-1]

@@ -75,8 +75,6 @@ point_xy_top_down = sorted(point_xy_top, key=lambda x: x[1], reverse=True)[0]
 '''
 进行检测项目个数 bottom_y - top_y / n
 '''
-print(point_xy_bottom_up)
-print(point_xy_top_down)
 cv.circle(images, (point_xy_bottom_up[0], point_xy_bottom_up[1]), 3, (0, 255, 0), 2)
 cv.circle(images, (point_xy_top_down[0], point_xy_top_down[1]), 3, (0, 255, 0), 2)
 y_value = (point_xy_bottom_up[1]-point_xy_top_down[1]) / 30
@@ -84,7 +82,7 @@ x_width = (point_xy_one[len(point_xy_one)-1][0] - point_xy_one[0][0]) / 2
 '''
 计算出每个点位，并描绘至原图层
 '''
-points = []
+colors = []
 last_y = point_xy_top_down[1]
 last_x = math.ceil(point_xy_one[0][0] + x_width)
 for i in range(0, 15):
@@ -92,16 +90,19 @@ for i in range(0, 15):
         last_y = last_y + y_value * 1.2
     else:
         last_y = last_y + y_value * 1.96
-    point = (last_x, math.ceil(last_y))
+    last_y = math.ceil(last_y)
+    point = (last_x, last_y)
     cv.circle(images, point, 3, (0, 255, 0), 2)
-    points.append(point)
+    # 获取rgb颜色值
+    colors.append(utils.get_color_rgb(rgb_img[last_y, last_x]))
+print(colors)
 '''
 展示所有的未/已处理的图片，进行对比
 '''
 # cv.imshow('frame', rgb_img)
 # cv.imshow('mask', mask)
 # cv.imshow('res', res)
-cv.imshow('result', images)
-k = cv.waitKey(0)
-if k == 27:
-    cv.destroyAllWindows()
+# cv.imshow('result', images)
+# k = cv.waitKey(0)
+# if k == 27:
+#     cv.destroyAllWindows()
