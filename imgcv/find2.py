@@ -6,15 +6,16 @@ import math
 '''
 读取图片
 '''
-img = cv.imread('./res/use3.jpg')
+point_num = 9
+img = cv.imread('./res/use4.jpg')
 b, g, r = cv.split(img)
 rgb_img = cv.merge([r, g, b])
 hsv = cv.cvtColor(rgb_img, cv.COLOR_RGB2HSV)
 '''
 设置色彩空间阈值（将RGB转换为HSV颜色空间值），并且结果只能为一维数组
 '''
-lower_hsv = utils.rgb2hsv([4, 155, 115])
-upper_hsv = utils.rgb2hsv([4, 165, 120])
+lower_hsv = utils.rgb2hsv([0, 0, 0])
+upper_hsv = utils.rgb2hsv([36, 36, 36])
 '''
 找到曝光点
 '''
@@ -30,7 +31,7 @@ img_res, contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_AP
 绘制所有的轮廓，在原图上进行标记
 '''
 images = img
-images = cv.drawContours(images, contours, -1, (0, 0, 0), 1)
+images = cv.drawContours(images, contours, -1, (0, 255, 0), 1)
 find_array = []
 '''
 遍历所有的轮廓，找到梯度最大值的顶层与最小值的底层X/Y轴坐标点
@@ -50,14 +51,14 @@ utils.ndarray_split_group(values, items)
 '''
 if len(items) != 2:
     print('图像特征值未提取完整，请重新上传图片')
-    exit(0)
+    #exit(0)
 point_xy_one = sorted(items[0])
 point_xy_two = sorted(items[1])
-deviation = 3
+deviation = 20
 if point_xy_one[0][0] + deviation < point_xy_two[0][0] \
         or point_xy_two[0][0] < point_xy_one[0][0] - deviation:
     print('图像点位不正确，请注意拍照姿势')
-    exit(0)
+    #exit(0)
 '''
 区分上下标示模块
 '''
@@ -79,15 +80,15 @@ point_xy_top_down = sorted(point_xy_top, key=lambda x: x[1], reverse=True)[0]
 '''
 cv.circle(images, (point_xy_bottom_up[0], point_xy_bottom_up[1]), 3, (0, 255, 0), 2)
 cv.circle(images, (point_xy_top_down[0], point_xy_top_down[1]), 3, (0, 255, 0), 2)
-y_value = (point_xy_bottom_up[1]-point_xy_top_down[1]) / 30
-x_width = (point_xy_one[len(point_xy_one)-1][0] - point_xy_one[0][0]) / 2
+y_value = (point_xy_bottom_up[1] - point_xy_top_down[1]) / (point_num * 2)
+x_width = (point_xy_one[len(point_xy_one) - 1][0] - point_xy_one[0][0]) / 2
 '''
 计算出每个点位，并描绘至原图层
 '''
 colors = []
 last_y = point_xy_top_down[1]
 last_x = math.ceil(point_xy_one[0][0] + x_width)
-for i in range(0, 15):
+for i in range(0, point_num):
     if i == 0:
         last_y = last_y + y_value * 1.2
     else:
@@ -101,10 +102,10 @@ print(colors)
 '''
 展示所有的未/已处理的图片，进行对比
 '''
-# cv.imshow('frame', rgb_img)
-# cv.imshow('mask', mask)
-# cv.imshow('res', res)
-# cv.imshow('result', images)
-# k = cv.waitKey(0)
-# if k == 27:
-#     cv.destroyAllWindows()
+cv.imshow('frame', rgb_img)
+cv.imshow('mask', mask)
+cv.imshow('res', res)
+cv.imshow('result', images)
+k = cv.waitKey(0)
+if k == 27:
+    cv.destroyAllWindows()
