@@ -4,9 +4,10 @@ import core.find_utils as utils
 import math
 from PIL import Image
 import uuid
+import os
 
 
-def run(path, is_rotate=False, point_num=9):
+def run(path, is_rotate=False, point_num=9, is_del=True):
     print("检测图片的指标项目个数为：%s" % point_num)
     """
     读取图片
@@ -88,6 +89,8 @@ def run(path, is_rotate=False, point_num=9):
                 file_type = file_types[len(file_types)-1]
                 new_path = './static/'+str(uuid.uuid1())+'.'+file_type
                 out.convert(pilim.mode).save(new_path)
+                if os.path.exists(path) and is_del:
+                    os.remove(path)
                 return run(new_path, True)
         else:
             return {
@@ -125,11 +128,14 @@ def run(path, is_rotate=False, point_num=9):
             colors.append(utils.get_color_rgb(rgb_img[last_y, last_x]))
         # print(y_value, last_y, last_x)
     # cv.imwrite('../static/images.jpg', images)
-    return {
+    info = {
         'code': 200,
         'msg': 'success',
         'data': colors
     }
+    if os.path.exists(path) and is_del:
+        os.remove(path)
+    return info
 
 
 if __name__ == "__main__":

@@ -1,7 +1,6 @@
 from flask import Flask, Response, request
 import json
-import uuid
-import core.find as find
+from core import find, upload
 
 app = Flask('myApp')
 
@@ -13,15 +12,14 @@ def home():
 
 @app.route('/cv', methods=['POST'])
 def start():
-    f = request.files['file']
-    # number = request.form['number']
-    filename = f.filename
-    file_types = filename.split(".")
-    file_type = filename.split(".")[len(file_types) - 1]
-    file_path = './static/' + str(uuid.uuid1()) + '.' + file_type
-    f.save(file_path)
-    # print(number)
+    file_path = upload.Upload().run(request)
     res = find.run(file_path, False)
+    return Response(json.dumps(res), mimetype='application/json')
+
+
+@app.route('/cv/info', methods=['POST'])
+def info():
+    res = upload.Upload().file_info(request)
     return Response(json.dumps(res), mimetype='application/json')
 
 

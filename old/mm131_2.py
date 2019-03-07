@@ -48,7 +48,7 @@ def start(url):
 
 threads = [threading.Thread(target=start, args={'http://www.mm131.com/qingchun/'})]
 
-for i in range(2,32):
+for i in range(2, 32):
     url_str = 'http://www.mm131.com/qingchun/list_1_%s.html' % i
     threads.append(threading.Thread(target=start,args={url_str}))
 
